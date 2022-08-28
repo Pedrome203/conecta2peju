@@ -63,8 +63,8 @@ class HomeView extends StatelessWidget {
                   children: const [
                     ChatView(),
                     DictionaryCardsView(),
-                    FeedRecomendationsView(),
                     FeedNewsView(),
+                    FeedRecomendationsView(),
                     GameView(),
                   ],
                 );

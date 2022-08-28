@@ -3,6 +3,7 @@ import 'package:conecta2peju/ui/common/card_widget.dart';
 import 'package:conecta2peju/ui/home/feed/feed_news_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class FeedNewsView extends StatefulWidget {
   const FeedNewsView({Key? key}) : super(key: key);
@@ -36,21 +37,35 @@ class _FeedNewsViewState extends State<FeedNewsView> {
                   return Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: CardPost(
-                          textCard: card.content,
-                          categoryCard: '8',
-                          isLike: card.isLike.toString(),
-                          isSave: '1',
-                          urlImage:
-                              'https://cdn-icons-png.flaticon.com/512/149/149071.png'));
+                        textCard: card.content,
+                        categoryCard: card.category.toString(),
+                        isLike: card.isLike.toString(),
+                        isSave: card.isSave.toString(),
+                        countLike: card.countLike.toString(),
+                        urlImage:
+                            'https://cdn-icons-png.flaticon.com/512/149/149071.png',
+                        nameUser: card.name,
+                        idUser: card.userId.toString(),
+                        idCard: card.id.toString(),
+                        index: index,
+                      ));
                 })
-            : Text('hola'),
+            : spinkit,
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'Reload',
+        backgroundColor: Theme.of(context).colorScheme.background,
+        focusColor: Theme.of(context).colorScheme.onBackground,
         onPressed: () => setState(() => {
               Provider.of<FeedNewsProvider>(context, listen: false).loadCards()
             }),
-        child: Icon(Icons.add),
+        child: const Icon(Icons.refresh),
       ),
     );
   }
 }
+
+const spinkit = SpinKitRotatingCircle(
+  color: Color.fromARGB(255, 34, 108, 138),
+  size: 50.0,
+);

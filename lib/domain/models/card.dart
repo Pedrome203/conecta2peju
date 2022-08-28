@@ -8,6 +8,7 @@ class CardPost {
       {required this.id,
       required this.name,
       required this.content,
+      required this.category,
       required this.userId,
       required this.isLike,
       required this.isSave,
@@ -16,15 +17,17 @@ class CardPost {
   final int id;
   final String name;
   final String content;
+  final int category;
   final int userId;
-  final int isLike;
-  final int isSave;
-  final int countLike;
+  int isLike;
+  int isSave;
+  int countLike;
 
   factory CardPost.fromJson(Map<String, dynamic> json) => CardPost(
         id: json["id"],
         name: json["user_id__name"],
         content: json["content"],
+        category: json["category_id"],
         userId: json["user_id"],
         isLike: json["isLike"],
         isSave: json["isSave"],
