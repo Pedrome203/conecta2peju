@@ -151,17 +151,17 @@ class CardPost extends StatelessWidget {
               child: FadeTransition(
                 opacity: Tween<double>(begin: 0.5, end: 1.0).animate(a1),
                 child: AlertDialog(
-                  title: Container(
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.background),
-                      child: Text(title)),
                   content: Text(
                     textTranslation.text,
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                   actions: <Widget>[
                     ElevatedButton(
-                        child: Text("Continuar"),
+                        child: const Text("OK"),
+                        style: ElevatedButton.styleFrom(
+                            onPrimary: Colors.white,
+                            textStyle: Theme.of(context).textTheme.bodyText1,
+                            primary: Theme.of(context).colorScheme.primary),
                         onPressed: () {
                           Navigator.of(context).pop();
                         }),

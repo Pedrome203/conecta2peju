@@ -5,10 +5,14 @@ import 'package:flutter/material.dart';
 
 class CategorySelected extends StatelessWidget {
   const CategorySelected(
-      {Key? key, @required this.appBarText, @required this.appBarColor})
+      {Key? key,
+      @required this.appBarText,
+      @required this.appBarColor,
+      @required this.idCategory})
       : super(key: key);
   final String? appBarText;
   final Color? appBarColor;
+  final int? idCategory;
 
   @override
   Widget build(BuildContext context) {

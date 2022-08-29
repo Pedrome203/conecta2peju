@@ -44,7 +44,7 @@ class _ProfileDataViewState extends State<ProfileDataView>
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'My Profile',
+            'Profile',
             style: Theme.of(context).textTheme.headline3,
           ),
           leading: IconButton(
@@ -78,29 +78,29 @@ class _ProfileDataViewState extends State<ProfileDataView>
                         Theme.of(context).textTheme.bodyText1?.color,
                     tabs: [
                       Tab(
-                          icon: Icon(Icons.content_copy,
-                              size: 24.0,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1
-                                  ?.color)),
+                          icon: Icon(CupertinoIcons.collections_solid,
+                              size: 30.0,
+                              color: Theme.of(context).colorScheme.primary)),
                       Tab(
                           icon: Icon(
-                        Icons.person,
-                        size: 24.0,
-                        color: Theme.of(context).textTheme.bodyText1?.color,
+                        Icons.group,
+                        size: 30.0,
+                        color: Theme.of(context).colorScheme.primary,
                       )),
                     ],
                   ),
                   Opacity(
-                      opacity: 0.3,
+                      opacity: 0.9,
                       child: Divider(
-                        height: 0.0,
-                        thickness: 0.2,
-                        color: Theme.of(context).textTheme.bodyText1?.color,
+                        height: 2.0,
+                        thickness: 0.9,
+                        color: Theme.of(context).colorScheme.primary,
                       )),
                   Expanded(
-                    child: Container(),
+                    child: TabBarView(children: [
+                      Container(child: Text('CARDS')),
+                      Container(child: Text('FRIENDS')),
+                    ]),
                   ),
                 ],
               ),
@@ -132,17 +132,19 @@ class ContentProfileUser extends StatelessWidget {
             width: double.infinity,
             child: TextButton(
               style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Theme.of(context).colorScheme.primaryContainer),
                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    side: const BorderSide(color: Colors.grey))),
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: const BorderSide(color: Colors.black))),
                 padding: MaterialStateProperty.all(EdgeInsets.zero),
               ),
               onPressed: () {},
-              child: Text("Editar perfil",
+              child: const Text("Edit Profile",
                   style: TextStyle(
-                      fontSize: 14.0,
+                      fontSize: 15.0,
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).textTheme.bodyText1?.color)),
+                      color: Colors.white)),
             ),
           ),
           const SizedBox(height: 12.0),
@@ -181,21 +183,44 @@ class ContentProfileUser extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
-            child: Column(children: <Widget>[
+              child: Column(children: const <Widget>[
+            Text(
+              '10',
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              "Cards",
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 12.0),
+              textAlign: TextAlign.center,
+            ),
+          ])),
+          Container(
+            child: Column(children: const <Widget>[
               Text(
-                '12',
+                '15',
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               Text(
-                "Cards",
+                "Friends",
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 12.0),
                 textAlign: TextAlign.center,
               ),
             ]),
           ),
+          Container(
+              padding: EdgeInsets.all(5.0),
+              decoration: BoxDecoration(color: Colors.purple),
+              child: const Text(
+                "B1",
+                style: TextStyle(fontSize: 18.0, color: Colors.white),
+                textAlign: TextAlign.center,
+              )),
         ],
       ),
     );
@@ -206,7 +231,13 @@ class ContentProfileUser extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: const [
-        Text('Juan el tojo'),
+        Text(
+          'Juan Manuel Balderrama González',
+          style: TextStyle(
+              fontSize: 18,
+              color: Color.fromARGB(255, 85, 85, 85),
+              fontWeight: FontWeight.w400),
+        ),
       ],
     );
   }

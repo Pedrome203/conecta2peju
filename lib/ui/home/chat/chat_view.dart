@@ -27,6 +27,8 @@ class ChatView extends StatelessWidget {
               ),
               padding: const EdgeInsets.all(25),
               child: FloatingActionButton(
+                backgroundColor: Theme.of(context).colorScheme.background,
+                focusColor: Theme.of(context).colorScheme.onBackground,
                 onPressed: () {
                   pushToPage(context, const FriendSelectionView());
                 },

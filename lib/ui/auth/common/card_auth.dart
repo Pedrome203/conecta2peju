@@ -55,13 +55,6 @@ Widget cardAuth(BuildContext context, String title, Widget button) {
               ),
             ),
             button,
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.abc),
-              ),
-            ),
           ],
         ),
       ),

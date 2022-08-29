@@ -31,8 +31,9 @@ class LogInView extends StatelessWidget {
                 cardAuth(
                     context,
                     'Login',
-                    primaryButton(context,
-                        onPressed: () {},
+                    primaryButton(context, onPressed: () {
+                      pushToPage(context, HomeView());
+                    },
                         text: 'Login',
                         colorButton:
                             Theme.of(context).colorScheme.primaryContainer,

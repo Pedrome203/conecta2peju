@@ -1,3 +1,4 @@
+import 'package:conecta2peju/ui/auth/log_in_view.dart';
 import 'package:conecta2peju/ui/auth/test.dart';
 import 'package:conecta2peju/ui/home/profile_settings/profile_data_view.dart';
 import 'package:conecta2peju/utils/navigator_utils.dart';
@@ -44,7 +45,7 @@ class MenuLateral extends StatelessWidget {
                 ),
               ),
               Text(
-                "TEST",
+                "Juan Manuel",
                 style: Theme.of(context).textTheme.headline6,
               ),
             ],
@@ -66,7 +67,9 @@ class MenuLateral extends StatelessWidget {
     ]));
   }
 
-  _logoutApp(BuildContext context) async {}
+  _logoutApp(BuildContext context) async {
+    pushToPage(context, LogInView());
+  }
 
   _contactSouport(BuildContext context) async {
     _setWhatsapp(context);

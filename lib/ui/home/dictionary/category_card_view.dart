@@ -29,6 +29,7 @@ class DictionaryCardsView extends StatelessWidget {
                       CategorySelected(
                         appBarText: item!.name,
                         appBarColor: item.color,
+                        idCategory: item.id,
                       ));
                 },
                 child: Container(
