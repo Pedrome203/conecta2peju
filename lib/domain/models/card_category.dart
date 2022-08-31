@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CategoryCard {
-  const CategoryCard({this.id, this.name, this.icon, this.color});
+  const CategoryCard(
+      {this.id, this.name, this.icon, this.color, this.secondary});
   final int? id;
   final String? name;
   final ImageIcon? icon;
   final Color? color;
+  final Color? secondary;
 }
 
 const listCategory = <CategoryCard>[
@@ -19,6 +21,7 @@ const listCategory = <CategoryCard>[
         color: Color.fromARGB(211, 59, 58, 58),
         size: 120,
       ),
+      secondary: Color.fromARGB(255, 136, 15, 192),
       color: Color.fromARGB(27, 136, 15, 192)),
   CategoryCard(
       id: 2,
@@ -28,6 +31,7 @@ const listCategory = <CategoryCard>[
         color: Color.fromARGB(211, 59, 58, 58),
         size: 130,
       ),
+      secondary: Color.fromARGB(255, 243, 48, 9),
       color: Color.fromARGB(27, 243, 48, 9)),
   CategoryCard(
       id: 3,
@@ -37,7 +41,8 @@ const listCategory = <CategoryCard>[
         color: Color.fromARGB(211, 59, 58, 58),
         size: 140,
       ),
-      color: Color.fromARGB(27, 251, 255, 23)),
+      color: Color.fromARGB(27, 251, 255, 9),
+      secondary: Color.fromARGB(255, 132, 134, 23)),
   CategoryCard(
       id: 4,
       name: 'Animals',
@@ -46,7 +51,8 @@ const listCategory = <CategoryCard>[
         color: Color.fromARGB(211, 59, 58, 58),
         size: 150,
       ),
-      color: Color.fromARGB(27, 62, 192, 15)),
+      color: Color.fromARGB(27, 62, 192, 15),
+      secondary: Color.fromARGB(255, 62, 192, 15)),
   CategoryCard(
       id: 5,
       name: 'Places',
@@ -55,7 +61,8 @@ const listCategory = <CategoryCard>[
         color: Color.fromARGB(211, 59, 58, 58),
         size: 120,
       ),
-      color: Color.fromARGB(27, 192, 15, 154)),
+      color: Color.fromARGB(27, 192, 15, 154),
+      secondary: Color.fromARGB(255, 192, 15, 154)),
   CategoryCard(
       id: 6,
       name: 'Other',
@@ -64,5 +71,6 @@ const listCategory = <CategoryCard>[
         color: Color.fromARGB(211, 59, 58, 58),
         size: 120,
       ),
-      color: Color.fromARGB(27, 19, 212, 246)),
+      color: Color.fromARGB(27, 19, 212, 246),
+      secondary: Color.fromARGB(255, 19, 212, 246)),
 ];

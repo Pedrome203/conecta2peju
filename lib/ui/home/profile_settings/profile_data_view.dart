@@ -1,9 +1,12 @@
+import 'package:conecta2peju/ui/common/card_single_widget.dart';
+import 'package:conecta2peju/ui/home/feed/feed_news_cubit.dart';
 import 'package:conecta2peju/ui/home/profile_settings/profile_data_cubit.dart';
-import 'package:conecta2peju/ui/auth/sign_in_view.dart';
 import 'package:conecta2peju/utils/navigator_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 import 'dart:math' as math;
 
@@ -28,16 +31,23 @@ class _ProfileDataViewState extends State<ProfileDataView>
 
   @override
   void initState() {
+    super.initState();
+    final cardsProvider = Provider.of<FeedNewsProvider>(context, listen: false);
+
+    cardsProvider.loadCards();
+
     controller = TabController(length: 2, vsync: this);
     scrollController =
         ScrollController(initialScrollOffset: 0.0, keepScrollOffset: false);
-    super.initState();
   }
 
+  final key = GlobalKey<AnimatedListState>();
   @override
   Widget build(BuildContext context) {
     final user = StreamChat.of(context).client.state.currentUser;
     final image = user?.extraData['image'];
+    final cards = context.watch<FeedNewsProvider>().cardList;
+    final loading = context.watch<FeedNewsProvider>().loading;
 
     return BlocProvider(
       create: (context) => ProfileDataCubit(context.read()),
@@ -98,8 +108,70 @@ class _ProfileDataViewState extends State<ProfileDataView>
                       )),
                   Expanded(
                     child: TabBarView(children: [
-                      Container(child: Text('CARDS')),
-                      Container(child: Text('FRIENDS')),
+                      loading == true
+                          ? GridView.builder(
+                              itemCount: cards!.cards!.length,
+                              itemBuilder: (context, index) {
+                                final card = cards.cards![index];
+                                return Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: CardPostSingle(
+                                      textCard: card.content,
+                                      categoryCard: card.category.toString(),
+                                      urlImage:
+                                          'https://cdn-icons-png.flaticon.com/512/149/149071.png',
+                                      nameUser: card.name,
+                                      idUser: card.userId.toString(),
+                                      idCard: card.id.toString(),
+                                      index: index,
+                                    ));
+                              },
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 1,
+                                crossAxisSpacing: 2,
+                                mainAxisSpacing: 1,
+                              ),
+                            )
+                          : spinkit,
+                      AnimatedList(
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        key: key,
+                        initialItemCount: cards!.cards!.length,
+                        itemBuilder: (context, index, animation) => Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              child: Stack(
+                                children: <Widget>[
+                                  Container(
+                                    height: 90,
+                                    width: 80,
+                                    decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          bottomLeft: Radius.circular(10)),
+                                      image: DecorationImage(
+                                          image: NetworkImage(
+                                              'https://cdn-icons-png.flaticon.com/512/149/149071.png'),
+                                          fit: BoxFit.cover),
+                                    ),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.center,
+                                    padding: const EdgeInsets.only(top: 30),
+                                    child: Text(
+                                      'Test',
+                                      style:
+                                          Theme.of(context).textTheme.bodyText1,
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        ),
+                      ),
                     ]),
                   ),
                 ],
@@ -111,6 +183,11 @@ class _ProfileDataViewState extends State<ProfileDataView>
     );
   }
 }
+
+const spinkit = SpinKitRotatingCircle(
+  color: Color.fromARGB(255, 34, 108, 138),
+  size: 50.0,
+);
 
 class ContentProfileUser extends StatelessWidget {
   ContentProfileUser({Key? key, required this.context}) : super(key: key);
