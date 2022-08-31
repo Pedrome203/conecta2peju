@@ -9,6 +9,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'dart:math' as math;
 
+import 'package:stream_chat_flutter/stream_chat_flutter.dart';
+
 class CategorySelected extends StatefulWidget {
   const CategorySelected(
       {Key? key,
@@ -43,7 +45,9 @@ class _CategorySelectedState extends State<CategorySelected>
     super.initState();
     final cardsProvider = Provider.of<FeedNewsProvider>(context, listen: false);
 
-    cardsProvider.loadCards();
+    cardsProvider.loadCardsSave(widget.idCategory!);
+    cardsProvider.loadCardsLike(widget.idCategory!);
+    cardsProvider.loadCardsCreate(widget.idCategory!);
 
     controller = TabController(length: 3, vsync: this);
     scrollController =
@@ -52,8 +56,11 @@ class _CategorySelectedState extends State<CategorySelected>
 
   @override
   Widget build(BuildContext context) {
-    final cards = context.watch<FeedNewsProvider>().cardList;
+    final cardsCreate = context.watch<FeedNewsProvider>().cardsCreate;
+    final cardsSave = context.watch<FeedNewsProvider>().cardsSave;
+    final cardsLike = context.watch<FeedNewsProvider>().cardsLike;
     final loading = context.watch<FeedNewsProvider>().loading;
+    final message = context.watch<FeedNewsProvider>().message;
     return Scaffold(
         appBar: AppBar(
           title: Text(
@@ -111,85 +118,119 @@ class _CategorySelectedState extends State<CategorySelected>
                   Expanded(
                     child: TabBarView(children: [
                       loading == true
-                          ? GridView.builder(
-                              itemCount: cards!.cards!.length,
-                              itemBuilder: (context, index) {
-                                final card = cards.cards![index];
-                                return Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: CardPostSingle(
-                                      textCard: card.content,
-                                      categoryCard: card.category.toString(),
-                                      urlImage:
-                                          'https://cdn-icons-png.flaticon.com/512/149/149071.png',
-                                      nameUser: card.name,
-                                      idUser: card.userId.toString(),
-                                      idCard: card.id.toString(),
-                                      index: index,
-                                    ));
-                              },
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 1,
-                                crossAxisSpacing: 2,
-                                mainAxisSpacing: 1,
-                              ),
-                            )
+                          ? cardsCreate != null
+                              ? GridView.builder(
+                                  itemCount: cardsCreate.cards!.length,
+                                  itemBuilder: (context, index) {
+                                    final cardCreate =
+                                        cardsCreate.cards![index];
+                                    return Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: CardPostSingle(
+                                          textCard: cardCreate.content,
+                                          categoryCard:
+                                              cardCreate.category.toString(),
+                                          urlImage:
+                                              'https://cdn-icons-png.flaticon.com/512/149/149071.png',
+                                          nameUser: cardCreate.name,
+                                          idUser: cardCreate.userId.toString(),
+                                          idCard: cardCreate.id.toString(),
+                                          index: index,
+                                        ));
+                                  },
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 1,
+                                    crossAxisSpacing: 2,
+                                    mainAxisSpacing: 1,
+                                  ))
+                              : Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Container(
+                                    child: Text(
+                                      message.toString(),
+                                      style:
+                                          Theme.of(context).textTheme.headline3,
+                                    ),
+                                  ),
+                                )
                           : spinkit,
                       loading == true
-                          ? GridView.builder(
-                              itemCount: cards!.cards!.length,
-                              itemBuilder: (context, index) {
-                                final card = cards.cards![index];
-                                return Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: CardPostSingle(
-                                      textCard: card.content,
-                                      categoryCard: card.category.toString(),
-                                      urlImage:
-                                          'https://cdn-icons-png.flaticon.com/512/149/149071.png',
-                                      nameUser: card.name,
-                                      idUser: card.userId.toString(),
-                                      idCard: card.id.toString(),
-                                      index: index,
-                                    ));
-                              },
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 1,
-                                crossAxisSpacing: 2,
-                                mainAxisSpacing: 1,
-                              ),
-                            )
+                          ? cardsLike != null
+                              ? GridView.builder(
+                                  itemCount: cardsLike.cards!.length,
+                                  itemBuilder: (context, index) {
+                                    final cardLike = cardsLike.cards![index];
+                                    return Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: CardPostSingle(
+                                          textCard: cardLike.content,
+                                          categoryCard:
+                                              cardLike.category.toString(),
+                                          urlImage:
+                                              'https://cdn-icons-png.flaticon.com/512/149/149071.png',
+                                          nameUser: cardLike.name,
+                                          idUser: cardLike.userId.toString(),
+                                          idCard: cardLike.id.toString(),
+                                          index: index,
+                                        ));
+                                  },
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 1,
+                                    crossAxisSpacing: 2,
+                                    mainAxisSpacing: 1,
+                                  ))
+                              : Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Container(
+                                    child: Text(
+                                      message.toString(),
+                                      style:
+                                          Theme.of(context).textTheme.headline3,
+                                    ),
+                                  ),
+                                )
                           : spinkit,
                       loading == true
-                          ? GridView.builder(
-                              itemCount: cards!.cards!.length,
-                              itemBuilder: (context, index) {
-                                final card = cards.cards![index];
-                                return Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: CardPostSingle(
-                                      textCard: card.content,
-                                      categoryCard: card.category.toString(),
-                                      urlImage:
-                                          'https://cdn-icons-png.flaticon.com/512/149/149071.png',
-                                      nameUser: card.name,
-                                      idUser: card.userId.toString(),
-                                      idCard: card.id.toString(),
-                                      index: index,
-                                    ));
-                              },
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 1,
-                                crossAxisSpacing: 2,
-                                mainAxisSpacing: 1,
-                              ),
-                            )
+                          ? cardsSave != null
+                              ? GridView.builder(
+                                  itemCount: cardsSave.cards!.length,
+                                  itemBuilder: (context, index) {
+                                    final cardSave = cardsSave.cards![index];
+                                    return Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: CardPostSingle(
+                                          textCard: cardSave.content,
+                                          categoryCard:
+                                              cardSave.category.toString(),
+                                          urlImage:
+                                              'https://cdn-icons-png.flaticon.com/512/149/149071.png',
+                                          nameUser: cardSave.name,
+                                          idUser: cardSave.userId.toString(),
+                                          idCard: cardSave.id.toString(),
+                                          index: index,
+                                        ));
+                                  },
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    childAspectRatio: 1,
+                                    crossAxisSpacing: 2,
+                                    mainAxisSpacing: 1,
+                                  ))
+                              : Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Container(
+                                    child: Text(
+                                      message.toString(),
+                                      style:
+                                          Theme.of(context).textTheme.headline3,
+                                    ),
+                                  ),
+                                )
                           : spinkit
                     ]),
                   ),

@@ -14,14 +14,14 @@ class CardPost {
       required this.isSave,
       required this.countLike});
 
-  final int id;
-  final String name;
-  final String content;
-  final int category;
-  final int userId;
-  int isLike;
-  int isSave;
-  int countLike;
+  final int? id;
+  final String? name;
+  final String? content;
+  final int? category;
+  final int? userId;
+  int? isLike;
+  int? isSave;
+  int? countLike;
 
   factory CardPost.fromJson(Map<String, dynamic> json) => CardPost(
         id: json["id"],

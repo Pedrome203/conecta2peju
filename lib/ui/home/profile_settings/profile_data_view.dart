@@ -1,6 +1,7 @@
 import 'package:conecta2peju/ui/common/card_single_widget.dart';
 import 'package:conecta2peju/ui/home/feed/feed_news_cubit.dart';
 import 'package:conecta2peju/ui/home/profile_settings/profile_data_cubit.dart';
+import 'package:conecta2peju/ui/home/profile_settings/user_cubit.dart';
 import 'package:conecta2peju/utils/navigator_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,9 +33,9 @@ class _ProfileDataViewState extends State<ProfileDataView>
   @override
   void initState() {
     super.initState();
-    final cardsProvider = Provider.of<FeedNewsProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    cardsProvider.loadCards();
+    userProvider.loadAllCardsCreate();
 
     controller = TabController(length: 2, vsync: this);
     scrollController =
@@ -46,7 +47,9 @@ class _ProfileDataViewState extends State<ProfileDataView>
   Widget build(BuildContext context) {
     final user = StreamChat.of(context).client.state.currentUser;
     final image = user?.extraData['image'];
-    final cards = context.watch<FeedNewsProvider>().cardList;
+    final cards = context.watch<UserProvider>().cardsCreate;
+    final friends = context.watch<UserProvider>().friends;
+
     final loading = context.watch<FeedNewsProvider>().loading;
 
     return BlocProvider(
@@ -138,39 +141,42 @@ class _ProfileDataViewState extends State<ProfileDataView>
                       AnimatedList(
                         padding: EdgeInsets.symmetric(horizontal: 5),
                         key: key,
-                        initialItemCount: cards!.cards!.length,
-                        itemBuilder: (context, index, animation) => Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0)),
-                              child: Stack(
-                                children: <Widget>[
-                                  Container(
-                                    height: 90,
-                                    width: 80,
-                                    decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          bottomLeft: Radius.circular(10)),
-                                      image: DecorationImage(
-                                          image: NetworkImage(
-                                              'https://cdn-icons-png.flaticon.com/512/149/149071.png'),
-                                          fit: BoxFit.cover),
+                        initialItemCount: friends!.length,
+                        itemBuilder: (context, index, animation) {
+                          final friend = friends[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0)),
+                                child: Stack(
+                                  children: <Widget>[
+                                    Container(
+                                      height: 90,
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            bottomLeft: Radius.circular(10)),
+                                        image: DecorationImage(
+                                            image: NetworkImage(friend.image),
+                                            fit: BoxFit.cover),
+                                      ),
                                     ),
-                                  ),
-                                  Container(
-                                    alignment: Alignment.center,
-                                    padding: const EdgeInsets.only(top: 30),
-                                    child: Text(
-                                      'Test',
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
+                                    Container(
+                                      alignment: Alignment.center,
+                                      padding: const EdgeInsets.only(top: 30),
+                                      child: Text(
+                                        friend.name,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              )),
-                        ),
+                                  ],
+                                )),
+                          );
+                        },
                       ),
                     ]),
                   ),
@@ -262,7 +268,7 @@ class ContentProfileUser extends StatelessWidget {
           Container(
               child: Column(children: const <Widget>[
             Text(
-              '10',
+              '37',
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
