@@ -15,23 +15,23 @@ class FeedNewsProvider extends ChangeNotifier {
   ListCards? cardsCreate;
   ListCards? cardsLike;
   String? message;
-  Future<void> loadCards() async {
+  Future<void> loadCards(int idUser) async {
     loading = false;
-    cardList = await getCards();
+    cardList = await getCards(idUser);
     loading = true;
 
     notifyListeners();
   }
 
-  Future<void> loadCardsSave(int idCategory) async {
+  Future<void> loadCardsSave(int idCategory, int idUser) async {
     ListCards? list;
     loading = false;
-    final response = await getCardsSave(idCategory);
-    print(response[0]);
+    print('CARDS' + idUser.toString());
+    final response = await getCardsSave(idCategory, idUser);
+
     if (response[0] == true) {
       list = response[1];
     } else {
-      print('NULL');
       message = 'Cards No Found';
     }
     cardsSave = list;
@@ -39,10 +39,10 @@ class FeedNewsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadCardsCreate(int idCategory) async {
+  Future<void> loadCardsCreate(int idCategory, int idUser) async {
     ListCards? list;
     loading = false;
-    final response = await getCardsCreate(idCategory);
+    final response = await getCardsCreate(idCategory, idUser);
 
     if (response[0] == true) {
       list = response[1];
@@ -54,10 +54,10 @@ class FeedNewsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadCardsLike(int idCategory) async {
+  Future<void> loadCardsLike(int idCategory, int idUser) async {
     ListCards? list;
     loading = false;
-    final response = await getCardsLike(idCategory);
+    final response = await getCardsLike(idCategory, idUser);
 
     if (response[0] == true) {
       list = response[1];
@@ -85,7 +85,7 @@ class FeedNewsProvider extends ChangeNotifier {
     cardList!.cards![index].isLike = status;
     final response = await postLike(idUser, idCard, sendStatus);
     if (response == false) {
-      if (status == 1) {
+      if (status == 0) {
         status = 1;
         cardList!.cards![index].countLike =
             cardList!.cards![index].countLike! + 1;
@@ -112,7 +112,7 @@ class FeedNewsProvider extends ChangeNotifier {
     cardList!.cards![index].isSave = status;
     final response = await postSave(idUser, idCard, sendStatus);
     if (response == false) {
-      if (status == 1) {
+      if (status == 0) {
         status = 1;
       } else {
         status = 0;
@@ -121,5 +121,14 @@ class FeedNewsProvider extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  Future<dynamic> addCard(
+    int idUser,
+    int idCategory,
+    String content,
+  ) async {
+    final response = await postCard(idUser, idCategory, content);
+    return response;
   }
 }

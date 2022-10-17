@@ -1,10 +1,14 @@
 import 'package:conecta2peju/ui/auth/log_in_view.dart';
 import 'package:conecta2peju/ui/auth/test.dart';
+import 'package:conecta2peju/ui/home/friend_requests/friend_request.dart';
 import 'package:conecta2peju/ui/home/profile_settings/profile_data_view.dart';
 import 'package:conecta2peju/utils/navigator_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
+
+import '../auth_provider.dart';
 
 class MenuLateral extends StatelessWidget {
   MenuLateral({Key? key}) : super(key: key);
@@ -13,7 +17,7 @@ class MenuLateral extends StatelessWidget {
   Widget build(BuildContext context) {
     final widthScreen = MediaQuery.of(context).size.width;
     final heightScreen = MediaQuery.of(context).size.height;
-
+    final auth = Provider.of<AuthProvider>(context, listen: false);
     String imageProfile =
         'https://cdn-icons-png.flaticon.com/512/149/149071.png';
 
@@ -45,7 +49,9 @@ class MenuLateral extends StatelessWidget {
                 ),
               ),
               Text(
-                "Juan Manuel",
+                auth.user!.name.length > 20
+                    ? auth.user!.name.substring(0, 20) + '...'
+                    : auth.user!.name,
                 style: Theme.of(context).textTheme.headline6,
               ),
             ],
@@ -75,10 +81,18 @@ class MenuLateral extends StatelessWidget {
     _setWhatsapp(context);
   }
 
-  _myFriendRequest(BuildContext context) async {}
+  _myFriendRequest(BuildContext context) async {
+    pushToPage(context, FriendRequest());
+  }
 
   _myProfile(BuildContext context) async {
-    pushToPage(context, ProfileDataView());
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    pushToPage(
+        context,
+        ProfileDataView(
+          idUser: auth.user!.id,
+          idStalker: auth.user!.id,
+        ));
   }
 
   _setWhatsapp(BuildContext context) async {}

@@ -1,6 +1,12 @@
+import 'package:conecta2peju/ui/common/loader_custom.dart';
+import 'package:conecta2peju/ui/common/messages_widgets.dart';
 import 'package:conecta2peju/utils/navigator_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
+import 'package:provider/provider.dart';
+
+import '../feed/feed_news_cubit.dart';
 
 class CreateCard extends StatefulWidget {
   const CreateCard(
@@ -13,11 +19,13 @@ class CreateCard extends StatefulWidget {
   final Color? appBarColor;
   final Color? secondaryColor;
   final int? idCategory;
+
   @override
   State<CreateCard> createState() => _CreateCardState();
 }
 
 class _CreateCardState extends State<CreateCard> {
+  final TextEditingController _content = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,12 +47,13 @@ class _CreateCardState extends State<CreateCard> {
       ),
       body: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 40,
           ),
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: TextFormField(
+              controller: _content,
               style: Theme.of(context).textTheme.bodyText2,
               decoration: InputDecoration(
                   fillColor: widget.appBarColor,
@@ -69,7 +78,10 @@ class _CreateCardState extends State<CreateCard> {
                       side: BorderSide(color: widget.secondaryColor!))),
                   padding: MaterialStateProperty.all(EdgeInsets.zero),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  await validatePost(
+                      context, _content.text.toString(), 2, widget.idCategory!);
+                },
                 child: const Text("POST",
                     style: TextStyle(
                         fontSize: 15.0,
@@ -82,4 +94,21 @@ class _CreateCardState extends State<CreateCard> {
       ),
     );
   }
+}
+
+validatePost(
+    BuildContext context, String content, int idUser, int idCategory) async {
+  loaderView(context);
+  if (content.isNotEmpty) {
+    final response = await Provider.of<FeedNewsProvider>(context, listen: false)
+        .addCard(idUser, idCategory, content);
+    if (response) {
+      messageOK(context, 'Tú card ha sido registrada con exito');
+    } else {
+      messageError(context, 'Ha ocurrido un erroor al hacer el registro');
+    }
+  } else {
+    messageError(context, 'No haz ingresado contenido a la card');
+  }
+  Loader.hide();
 }

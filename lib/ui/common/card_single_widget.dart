@@ -1,5 +1,8 @@
+import 'package:conecta2peju/ui/common/loader_custom.dart';
+import 'package:conecta2peju/ui/common/messages_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:translator/translator.dart';
 
 class CardPostSingle extends StatelessWidget {
@@ -44,10 +47,12 @@ class CardPostSingle extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () async {
-                  _openCustomDialog(context, 'Traducción', textCard!);
+                  loaderView(context);
+                  await _openMessageTranslate(context, textCard!);
                 },
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   child: Text(textCard!,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.headline5),
@@ -60,44 +65,13 @@ class CardPostSingle extends StatelessWidget {
     );
   }
 
-  Future<void> _openCustomDialog(
-      BuildContext context, String title, String textCard) async {
+  Future<void> _openMessageTranslate(
+      BuildContext context, String textCard) async {
     final translator = GoogleTranslator();
     final input = textCard;
     var textTranslation =
         await translator.translate(input, from: 'en', to: 'es');
-    showGeneralDialog(
-        barrierColor: Colors.black.withOpacity(0.5),
-        transitionBuilder: (context, a1, a2, widget) {
-          return ScaleTransition(
-              scale: Tween<double>(begin: 0.5, end: 1.0).animate(a1),
-              child: FadeTransition(
-                opacity: Tween<double>(begin: 0.5, end: 1.0).animate(a1),
-                child: AlertDialog(
-                  content: Text(
-                    textTranslation.text,
-                    style: Theme.of(context).textTheme.bodyText2,
-                  ),
-                  actions: <Widget>[
-                    ElevatedButton(
-                        child: const Text("OK"),
-                        style: ElevatedButton.styleFrom(
-                            onPrimary: Colors.white,
-                            textStyle: Theme.of(context).textTheme.bodyText1,
-                            primary: Theme.of(context).colorScheme.primary),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        }),
-                  ],
-                ),
-              ));
-        },
-        transitionDuration: const Duration(milliseconds: 300),
-        barrierDismissible: true,
-        barrierLabel: '',
-        context: context,
-        pageBuilder: (context, animation1, animation2) {
-          return Container();
-        });
+    Loader.hide();
+    messageTranslate(context, textTranslation.toString());
   }
 }

@@ -6,12 +6,29 @@ import 'package:conecta2peju/ui/splash/splash_cubit.dart';
 import 'package:conecta2peju/utils/navigator_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
-class SplashView extends StatelessWidget {
+import '../home/auth_provider.dart';
+
+class SplashView extends StatefulWidget {
   const SplashView({Key? key}) : super(key: key);
 
   @override
+  State<SplashView> createState() => _SplashViewState();
+}
+
+class _SplashViewState extends State<SplashView> {
+  @override
+  void initState() {
+    super.initState();
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    auth.authUser(1);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final loading = context.watch<AuthProvider>().loading;
+    print(loading);
     return BlocProvider(
       create: (context) => SplashCubit(context.read())..init(),
       child: BlocListener<SplashCubit, SplashState>(

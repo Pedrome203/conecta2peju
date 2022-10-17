@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+import '../auth_provider.dart';
+
 class FeedNewsView extends StatefulWidget {
   const FeedNewsView({Key? key}) : super(key: key);
 
@@ -17,13 +19,14 @@ class _FeedNewsViewState extends State<FeedNewsView> {
   void initState() {
     super.initState();
     final cardsProvider = Provider.of<FeedNewsProvider>(context, listen: false);
+    final userProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    cardsProvider.loadCards();
+    cardsProvider.loadCards(userProvider.user!.id);
   }
 
   Widget build(BuildContext context) {
     final cards = context.watch<FeedNewsProvider>().cardList;
-
+    final auth = Provider.of<AuthProvider>(context, listen: false);
     final loading = context.watch<FeedNewsProvider>().loading;
 
     return Scaffold(
@@ -37,13 +40,13 @@ class _FeedNewsViewState extends State<FeedNewsView> {
                   return Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: CardPost(
+                        idUserAuth: auth.user!.id,
                         textCard: card.content,
                         categoryCard: card.category.toString(),
                         isLike: card.isLike.toString(),
                         isSave: card.isSave.toString(),
                         countLike: card.countLike.toString(),
-                        urlImage:
-                            'https://cdn-icons-png.flaticon.com/512/149/149071.png',
+                        urlImage: card.image,
                         nameUser: card.name,
                         idUser: card.userId.toString(),
                         idCard: card.id.toString(),
@@ -57,7 +60,8 @@ class _FeedNewsViewState extends State<FeedNewsView> {
         backgroundColor: Theme.of(context).colorScheme.background,
         focusColor: Theme.of(context).colorScheme.onBackground,
         onPressed: () => setState(() => {
-              Provider.of<FeedNewsProvider>(context, listen: false).loadCards()
+              Provider.of<FeedNewsProvider>(context, listen: false)
+                  .loadCards(auth.user!.id)
             }),
         child: const Icon(Icons.refresh),
       ),

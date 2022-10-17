@@ -7,6 +7,7 @@ class CardPost {
   CardPost(
       {required this.id,
       required this.name,
+      required this.image,
       required this.content,
       required this.category,
       required this.userId,
@@ -16,6 +17,7 @@ class CardPost {
 
   final int? id;
   final String? name;
+  final String? image;
   final String? content;
   final int? category;
   final int? userId;
@@ -26,6 +28,7 @@ class CardPost {
   factory CardPost.fromJson(Map<String, dynamic> json) => CardPost(
         id: json["id"],
         name: json["user_id__name"],
+        image: json["user_id__image"],
         content: json["content"],
         category: json["category_id"],
         userId: json["user_id"],

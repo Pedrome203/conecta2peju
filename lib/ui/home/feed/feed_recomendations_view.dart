@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
+import '../auth_provider.dart';
+
 class FeedRecomendationsView extends StatefulWidget {
   const FeedRecomendationsView({Key? key}) : super(key: key);
 
@@ -17,7 +19,7 @@ class _FeedRecomendationsViewState extends State<FeedRecomendationsView> {
   @override
   Widget build(BuildContext context) {
     final cards = context.watch<FeedNewsProvider>().cardList;
-
+    final auth = Provider.of<AuthProvider>(context, listen: false);
     final loading = context.watch<FeedNewsProvider>().loading;
 
     return Scaffold(
@@ -31,6 +33,7 @@ class _FeedRecomendationsViewState extends State<FeedRecomendationsView> {
                   return Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: CardPost(
+                        idUserAuth: auth.user!.id,
                         textCard: card.content,
                         categoryCard: card.category.toString(),
                         isLike: card.isLike.toString(),
@@ -51,7 +54,8 @@ class _FeedRecomendationsViewState extends State<FeedRecomendationsView> {
         backgroundColor: Theme.of(context).colorScheme.background,
         focusColor: Theme.of(context).colorScheme.onBackground,
         onPressed: () => setState(() => {
-              Provider.of<FeedNewsProvider>(context, listen: false).loadCards()
+              Provider.of<FeedNewsProvider>(context, listen: false)
+                  .loadCards(auth.user!.id)
             }),
         child: const Icon(Icons.refresh),
       ),

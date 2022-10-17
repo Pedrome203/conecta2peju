@@ -1,13 +1,19 @@
+import 'package:conecta2peju/ui/common/loader_custom.dart';
+import 'package:conecta2peju/ui/common/messages_widgets.dart';
 import 'package:conecta2peju/ui/home/feed/feed_news_cubit.dart';
+import 'package:conecta2peju/ui/home/profile_settings/profile_data_view.dart';
+import 'package:conecta2peju/utils/navigator_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:translator/translator.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 
 class CardPost extends StatelessWidget {
   const CardPost(
       {Key? key,
+      @required this.idUserAuth,
       @required this.textCard,
       @required this.categoryCard,
       @required this.isLike,
@@ -19,7 +25,7 @@ class CardPost extends StatelessWidget {
       @required this.idCard,
       @required this.index})
       : super(key: key);
-
+  final int? idUserAuth;
   final String? urlImage;
   final String? textCard;
   final String? categoryCard;
@@ -54,7 +60,11 @@ class CardPost extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      _openCustomDialog(context, 'User', nameUser!);
+                      pushToPage(
+                          context,
+                          ProfileDataView(
+                              idUser: int.parse(idUser!),
+                              idStalker: idUserAuth!));
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -64,7 +74,9 @@ class CardPost extends StatelessWidget {
                           width: 50,
                           height: 50,
                           fit: BoxFit.cover,
-                          imageUrl: urlImage!,
+                          imageUrl: urlImage != 'NA'
+                              ? urlImage!
+                              : 'https://ui-avatars.com/api/?name=' + nameUser!,
                         ),
                       ),
                     ),
@@ -83,7 +95,7 @@ class CardPost extends StatelessWidget {
                       ),
                       onPressed: () async {
                         Provider.of<FeedNewsProvider>(context, listen: false)
-                            .addSave(index!, 2, int.parse(idCard!),
+                            .addSave(index!, idUserAuth!, int.parse(idCard!),
                                 int.parse(isSave!));
                       },
                     ),
@@ -92,7 +104,7 @@ class CardPost extends StatelessWidget {
               ),
               GestureDetector(
                 onTap: () async {
-                  _openCustomDialog(context, 'Traducción', textCard!);
+                  await _openMessageTranslate(context, textCard!);
                 },
                 child: Padding(
                   // Texto en ingles
@@ -122,8 +134,8 @@ class CardPost extends StatelessWidget {
                           onPressed: () async {
                             Provider.of<FeedNewsProvider>(context,
                                     listen: false)
-                                .addLike(index!, 2, int.parse(idCard!),
-                                    int.parse(isLike!));
+                                .addLike(index!, idUserAuth!,
+                                    int.parse(idCard!), int.parse(isLike!));
                           },
                         ),
                         Text(countLike!)
@@ -137,44 +149,14 @@ class CardPost extends StatelessWidget {
     );
   }
 
-  Future<void> _openCustomDialog(
-      BuildContext context, String title, String textCard) async {
+  Future<void> _openMessageTranslate(
+      BuildContext context, String textCard) async {
+    loaderView(context);
     final translator = GoogleTranslator();
     final input = textCard;
     var textTranslation =
         await translator.translate(input, from: 'en', to: 'es');
-    showGeneralDialog(
-        barrierColor: Colors.black.withOpacity(0.5),
-        transitionBuilder: (context, a1, a2, widget) {
-          return ScaleTransition(
-              scale: Tween<double>(begin: 0.5, end: 1.0).animate(a1),
-              child: FadeTransition(
-                opacity: Tween<double>(begin: 0.5, end: 1.0).animate(a1),
-                child: AlertDialog(
-                  content: Text(
-                    textTranslation.text,
-                    style: Theme.of(context).textTheme.bodyText2,
-                  ),
-                  actions: <Widget>[
-                    ElevatedButton(
-                        child: const Text("OK"),
-                        style: ElevatedButton.styleFrom(
-                            onPrimary: Colors.white,
-                            textStyle: Theme.of(context).textTheme.bodyText1,
-                            primary: Theme.of(context).colorScheme.primary),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        }),
-                  ],
-                ),
-              ));
-        },
-        transitionDuration: const Duration(milliseconds: 300),
-        barrierDismissible: true,
-        barrierLabel: '',
-        context: context,
-        pageBuilder: (context, animation1, animation2) {
-          return Container();
-        });
+    Loader.hide();
+    messageTranslate(context, textTranslation.toString());
   }
 }

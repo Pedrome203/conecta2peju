@@ -1,6 +1,7 @@
 import 'package:conecta2peju/data/rest/card_rest_service.dart';
 import 'package:conecta2peju/dependecies.dart';
 import 'package:conecta2peju/domain/models/repository/card_api.dart';
+import 'package:conecta2peju/ui/home/auth_provider.dart';
 import 'package:conecta2peju/ui/home/feed/feed_news_cubit.dart';
 import 'package:conecta2peju/ui/home/profile_settings/user_cubit.dart';
 import 'package:conecta2peju/ui/splash/splash_view.dart';
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
             providers: [
               ChangeNotifierProvider(create: (context) => FeedNewsProvider()),
               ChangeNotifierProvider(create: (context) => UserProvider()),
+              ChangeNotifierProvider(create: (context) => AuthProvider()),
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,

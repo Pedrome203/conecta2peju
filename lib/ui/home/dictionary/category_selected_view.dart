@@ -11,6 +11,8 @@ import 'dart:math' as math;
 
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
+import '../auth_provider.dart';
+
 class CategorySelected extends StatefulWidget {
   const CategorySelected(
       {Key? key,
@@ -44,10 +46,10 @@ class _CategorySelectedState extends State<CategorySelected>
   void initState() {
     super.initState();
     final cardsProvider = Provider.of<FeedNewsProvider>(context, listen: false);
-
-    cardsProvider.loadCardsSave(widget.idCategory!);
-    cardsProvider.loadCardsLike(widget.idCategory!);
-    cardsProvider.loadCardsCreate(widget.idCategory!);
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    cardsProvider.loadCardsSave(widget.idCategory!, auth.user!.id);
+    cardsProvider.loadCardsLike(widget.idCategory!, auth.user!.id);
+    cardsProvider.loadCardsCreate(widget.idCategory!, auth.user!.id);
 
     controller = TabController(length: 3, vsync: this);
     scrollController =
@@ -243,7 +245,7 @@ class _CategorySelectedState extends State<CategorySelected>
           heroTag: 'category-select',
           backgroundColor: widget.secondaryColor,
           onPressed: () => {
-            pushAndReplaceToPage(
+            pushToPage(
                 context,
                 CreateCard(
                     appBarColor: widget.appBarColor,
