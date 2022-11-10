@@ -27,10 +27,8 @@ class StreamApiLocalImpl extends StreamApiRepository {
   }
 
   @override
-  Future<List<ChatUser>> getChatUsers() async {
-    final result = await _client.queryUsers(
-        filter:
-            Filter.in_('id', const ['Pedrome203', 'pedrome203', 'juanmanuel']));
+  Future<List<ChatUser>> getChatUsers(List<String> friends) async {
+    final result = await _client.queryUsers(filter: Filter.in_('id', friends));
     final chatUsers = result.users
         .where((element) => element.id != _client.state.currentUser!.id)
         .map(
@@ -82,9 +80,12 @@ class StreamApiLocalImpl extends StreamApiRepository {
         await _client.queryUsers(filter: Filter.in_('id', [userId]));
 
     if (response.users.isNotEmpty) {*/
+
     final token = await getToken(userId);
+
     await _client.connectUser(User(id: userId), token);
-    return false;
+    return _client.state.currentUser!.name != null &&
+        _client.state.currentUser!.name != userId;
     /*}
     return false;*/
   }

@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:conecta2peju/data/rest/user_rest_service.dart';
 
 import 'package:conecta2peju/domain/models/list_cards.dart';
+import 'package:conecta2peju/domain/models/list_requests.dart';
 import 'package:conecta2peju/domain/models/list_users.dart';
 import 'package:conecta2peju/domain/models/user.dart';
 
@@ -15,7 +16,7 @@ class UserProvider extends ChangeNotifier {
   bool? loading = true;
   User? user;
   int? status;
-
+  ListRequests? requests;
   ListCards? cardsCreate;
   ListUsers? friends;
   String? message;
@@ -35,6 +36,21 @@ class UserProvider extends ChangeNotifier {
       message = 'Cards No Found';
     }
     cardsCreate = list;
+    loading = false;
+    notifyListeners();
+  }
+
+  Future<void> loadFriendRequests(int idUser) async {
+    loading = true;
+
+    final response = await getFriendRequests(idUser);
+
+    if (response[0] == true) {
+      requests = response[1];
+    } else {
+      message = 'Error processing request';
+    }
+
     loading = false;
     notifyListeners();
   }

@@ -23,7 +23,8 @@ class CardPost extends StatelessWidget {
       @required this.nameUser,
       @required this.idUser,
       @required this.idCard,
-      @required this.index})
+      @required this.index,
+      @required this.isRecomendation})
       : super(key: key);
   final int? idUserAuth;
   final String? urlImage;
@@ -36,6 +37,7 @@ class CardPost extends StatelessWidget {
   final String? idUser;
   final String? idCard;
   final int? index;
+  final bool? isRecomendation;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -132,10 +134,17 @@ class CardPost extends StatelessWidget {
                                 : const Color.fromARGB(255, 86, 81, 81),
                           ),
                           onPressed: () async {
-                            Provider.of<FeedNewsProvider>(context,
-                                    listen: false)
-                                .addLike(index!, idUserAuth!,
-                                    int.parse(idCard!), int.parse(isLike!));
+                            if (isRecomendation!) {
+                              Provider.of<FeedNewsProvider>(context,
+                                      listen: false)
+                                  .addLikeRecomendation(index!, idUserAuth!,
+                                      int.parse(idCard!), int.parse(isLike!));
+                            } else {
+                              Provider.of<FeedNewsProvider>(context,
+                                      listen: false)
+                                  .addLike(index!, idUserAuth!,
+                                      int.parse(idCard!), int.parse(isLike!));
+                            }
                           },
                         ),
                         Text(countLike!)

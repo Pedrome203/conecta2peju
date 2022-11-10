@@ -10,15 +10,32 @@ import 'package:flutter/material.dart';
 class FeedNewsProvider extends ChangeNotifier {
   FeedNewsProvider();
   bool? loading = false;
+  bool? loadingRecommendations = false;
   ListCards? cardList;
+  ListCards? recommendations;
   ListCards? cardsSave;
   ListCards? cardsCreate;
   ListCards? cardsLike;
   String? message;
+  bool? recommendationsIsEmpty = true;
   Future<void> loadCards(int idUser) async {
     loading = false;
     cardList = await getCards(idUser);
     loading = true;
+
+    notifyListeners();
+  }
+
+  Future<void> loadRecommendations(int idUser) async {
+    loadingRecommendations = true;
+    final response = await getRecommendations(idUser);
+    if (response[0]) {
+      recommendations = response[1];
+      recommendationsIsEmpty = false;
+    } else {
+      recommendationsIsEmpty = true;
+    }
+    loadingRecommendations = false;
 
     notifyListeners();
   }
@@ -100,6 +117,38 @@ class FeedNewsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> addLikeRecomendation(
+      int index, int idUser, int idCard, int status) async {
+    bool sendStatus;
+    if (status == 1) {
+      status = 0;
+      sendStatus = false;
+      recommendations!.cards![index].countLike =
+          recommendations!.cards![index].countLike! - 1;
+    } else {
+      status = 1;
+      sendStatus = true;
+      recommendations!.cards![index].countLike =
+          recommendations!.cards![index].countLike! + 1;
+    }
+    recommendations!.cards![index].isLike = status;
+    final response = await postLike(idUser, idCard, sendStatus);
+    if (response == false) {
+      if (status == 0) {
+        status = 1;
+        recommendations!.cards![index].countLike =
+            recommendations!.cards![index].countLike! + 1;
+      } else {
+        status = 0;
+        recommendations!.cards![index].countLike =
+            recommendations!.cards![index].countLike! - 1;
+      }
+      recommendations!.cards![index].isLike = status;
+    }
+
+    notifyListeners();
+  }
+
   Future<void> addSave(int index, int idUser, int idCard, int status) async {
     bool sendStatus;
     if (status == 1) {
@@ -118,6 +167,30 @@ class FeedNewsProvider extends ChangeNotifier {
         status = 0;
       }
       cardList!.cards![index].isSave = status;
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> addSaveRecomendation(
+      int index, int idUser, int idCard, int status) async {
+    bool sendStatus;
+    if (status == 1) {
+      status = 0;
+      sendStatus = false;
+    } else {
+      status = 1;
+      sendStatus = true;
+    }
+    recommendations!.cards![index].isSave = status;
+    final response = await postSave(idUser, idCard, sendStatus);
+    if (response == false) {
+      if (status == 0) {
+        status = 1;
+      } else {
+        status = 0;
+      }
+      recommendations!.cards![index].isSave = status;
     }
 
     notifyListeners();

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_overlay_loader/flutter_overlay_loader.dart';
 import 'package:provider/provider.dart';
 
+import '../auth_provider.dart';
 import '../feed/feed_news_cubit.dart';
 
 class CreateCard extends StatefulWidget {
@@ -28,6 +29,7 @@ class _CreateCardState extends State<CreateCard> {
   final TextEditingController _content = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -79,8 +81,8 @@ class _CreateCardState extends State<CreateCard> {
                   padding: MaterialStateProperty.all(EdgeInsets.zero),
                 ),
                 onPressed: () async {
-                  await validatePost(
-                      context, _content.text.toString(), 2, widget.idCategory!);
+                  await validatePost(context, _content.text.toString(),
+                      auth.user!.id, widget.idCategory!);
                 },
                 child: const Text("POST",
                     style: TextStyle(

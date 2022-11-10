@@ -8,9 +8,9 @@ class SplashCubit extends Cubit<SplashState> {
   SplashCubit(this._loginUseCase) : super(SplashState.none);
   final LoginUseCase _loginUseCase;
 
-  void init() async {
+  void init(String username) async {
     try {
-      final result = await _loginUseCase.validateLogin();
+      final result = await _loginUseCase.validateLogin(username);
       if (result) {
         emit(SplashState.existingUser);
       }

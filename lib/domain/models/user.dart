@@ -6,6 +6,7 @@ class User {
     required this.englishLevel,
     required this.idFirebase,
     required this.image,
+    required this.username,
   });
 
   final int id;
@@ -14,6 +15,7 @@ class User {
   final int englishLevel;
   final String idFirebase;
   final String image;
+  final String username;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
       id: json["idUser"],
@@ -21,7 +23,8 @@ class User {
       email: json["email"],
       englishLevel: json["english_level_id"],
       idFirebase: json["id_firebase"],
-      image: json["image"]);
+      image: json["image"],
+      username: json["username"]);
 }
 
 final listFriends = <User>[];

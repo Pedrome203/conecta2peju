@@ -1,10 +1,12 @@
 import 'package:conecta2peju/domain/models/chat_user.dart';
+import 'package:conecta2peju/ui/home/auth_provider.dart';
 import 'package:conecta2peju/ui/home/chat/chat_view.dart';
 import 'package:conecta2peju/ui/home/chat/selection/friend_selection_cubit.dart';
 import 'package:conecta2peju/ui/home/chat/selection/group_selection_view.dart';
 import 'package:conecta2peju/utils/navigator_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:stream_chat_flutter/stream_chat_flutter.dart';
 
 class FriendSelectionView extends StatelessWidget {
@@ -26,10 +28,12 @@ class FriendSelectionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => FriendSelectionCubit(context.read())..init(),
+          create: (context) =>
+              FriendSelectionCubit(context.read())..init(auth.friends),
         ),
         BlocProvider(create: (_) => FriendsGroupCubit())
       ],
@@ -64,11 +68,16 @@ class FriendSelectionView extends StatelessWidget {
                     BackButton(
                       onPressed: Navigator.of(context).pop,
                     ),
-                    Text("People"),
+                    Text("Friends"),
                   ]),
                 if (!isGroup)
                   // ignore: dead_code
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: Theme.of(context).colorScheme.background,
+                        onPrimary:
+                            Theme.of(context).colorScheme.primaryContainer,
+                        textStyle: Theme.of(context).textTheme.headline5),
                     onPressed: () {
                       context.read<FriendsGroupCubit>().changeToGroup();
                     },
@@ -97,7 +106,9 @@ class FriendSelectionView extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   const CircleAvatar(),
-                                  Text(chatUserState.chatUser!.name!)
+                                  Text(chatUserState.chatUser!.name!,
+                                      style:
+                                          Theme.of(context).textTheme.headline1)
                                 ],
                               ),
                               IconButton(
@@ -122,7 +133,8 @@ class FriendSelectionView extends StatelessWidget {
                                 _createFriendChannel(context, chatUserState);
                               },
                               leading: CircleAvatar(),
-                              title: Text(chatUserState.chatUser!.name!),
+                              title: Text(chatUserState.chatUser!.name!,
+                                  style: Theme.of(context).textTheme.bodyText2),
                               trailing: isGroup
                                   ? Checkbox(
                                       value: chatUserState.selected!,

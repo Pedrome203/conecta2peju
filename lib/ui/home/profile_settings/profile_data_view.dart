@@ -249,13 +249,15 @@ class _ProfileDataViewState extends State<ProfileDataView>
                                           EdgeInsets.zero),
                                     ),
                                     onPressed: () async {
-                                      status == 0 || status == 3
-                                          ? await sendRequest(
-                                              context,
-                                              widget.idStalker!,
-                                              widget.idUser!,
-                                              1)
-                                          : print('NULL');
+                                      widget.idUser == widget.idStalker
+                                          ? print('EDIT PROFILE')
+                                          : status == 0 || status == 3
+                                              ? await sendRequest(
+                                                  context,
+                                                  widget.idStalker!,
+                                                  widget.idUser!,
+                                                  1)
+                                              : print('NULL');
                                     },
                                     child: Text(
                                         widget.idUser == widget.idStalker

@@ -7,8 +7,8 @@ class LoginUseCase {
   final AuthRepository authRepository;
   final StreamApiRepository streamApiRepository;
 
-  Future<bool> validateLogin() async {
-    final user = await authRepository.getAuthUser();
+  Future<bool> validateLogin(String username) async {
+    final user = await authRepository.getAuthUser(username);
     if (user != null) {
       final result = await streamApiRepository.connectIfExist(user.id!);
       if (result) {

@@ -1,4 +1,4 @@
-import 'package:conecta2peju/ui/home/chat/selection/friend_selection_view.dart';
+/*import 'package:conecta2peju/ui/home/chat/selection/friend_selection_view.dart';
 
 import 'package:conecta2peju/ui/profile_verify/profile_verify_cubit.dart';
 import 'package:conecta2peju/utils/navigator_utils.dart';
@@ -60,3 +60,4 @@ class ProfileVerifyView extends StatelessWidget {
     );
   }
 }
+*/

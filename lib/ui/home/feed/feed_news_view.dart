@@ -51,6 +51,7 @@ class _FeedNewsViewState extends State<FeedNewsView> {
                         idUser: card.userId.toString(),
                         idCard: card.id.toString(),
                         index: index,
+                        isRecomendation: false,
                       ));
                 })
             : spinkit,

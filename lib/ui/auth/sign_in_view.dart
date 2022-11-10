@@ -10,7 +10,7 @@ import 'package:conecta2peju/utils/navigator_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SignInView extends StatelessWidget {
+/*class SignInView extends StatelessWidget {
   const SignInView({Key? key}) : super(key: key);
 
   @override
@@ -46,4 +46,4 @@ class SignInView extends StatelessWidget {
       ),
     );
   }
-}
+}*/

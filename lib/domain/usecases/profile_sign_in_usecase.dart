@@ -18,8 +18,8 @@ class ProfileSignInUseCase {
   final UploadStorageRepository _uploadStorageRepository;
   final StreamApiRepository _streamApiRepository;
 
-  Future<void> verify(ProfileInput input) async {
-    final auth = await _authRepository.getAuthUser();
+  Future<void> verify(ProfileInput input, String username) async {
+    final auth = await _authRepository.getAuthUser(username);
     final token = await _streamApiRepository.getToken(auth.id!);
     final image = await _uploadStorageRepository.uploadPhoto(
         input.imageFile!, 'users/${auth.id}');

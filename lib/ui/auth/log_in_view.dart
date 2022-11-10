@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../home/home_view.dart';
+import '../splash/splash_view.dart';
 
 class LogInView extends StatelessWidget {
   const LogInView({Key? key}) : super(key: key);
@@ -19,26 +20,11 @@ class LogInView extends StatelessWidget {
       child: BlocConsumer<LogInCubit, LogInState>(
         listener: (context, snapchot) {
           if (snapchot == LogInState.existingUser) {
-            pushAndReplaceToPage(context, HomeView());
+            pushAndReplaceToPage(context, SplashView());
           }
         },
         builder: (context, snapshot) {
-          return Scaffold(
-            body: bodyAuth(
-                context,
-                'Login',
-                'Sign In',
-                cardAuth(
-                    context,
-                    'Login',
-                    primaryButton(context, onPressed: () {
-                      pushToPage(context, HomeView());
-                    },
-                        text: 'Login',
-                        colorButton:
-                            Theme.of(context).colorScheme.primaryContainer,
-                        colorText: Theme.of(context).colorScheme.background))),
-          );
+          return Scaffold(body: bodyAuth(context, 'Login', ''));
         },
       ),
     );

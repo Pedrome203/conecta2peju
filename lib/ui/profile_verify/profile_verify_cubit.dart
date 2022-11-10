@@ -1,4 +1,4 @@
-import 'dart:io';
+/*import 'dart:io';
 
 import 'package:conecta2peju/data/image_picker_repository.dart';
 import 'package:conecta2peju/data/stream_api_repository.dart';
@@ -21,11 +21,11 @@ class ProfileVerifyCubit extends Cubit<ProfileState> {
   final ImagePickerRepository _imagePickerRepository;
   final ProfileSignInUseCase _profileSignInUseCase;
 
-  void startChatting() async {
+  void startChatting(String username) async {
     final file = state.file;
     final name = nameController.text;
-    await _profileSignInUseCase
-        .verify(ProfileInput(imageFile: file, name: name));
+    await _profileSignInUseCase.verify(
+        ProfileInput(imageFile: file, name: name), username);
     emit(ProfileState(file, success: true));
   }
 
@@ -34,4 +34,4 @@ class ProfileVerifyCubit extends Cubit<ProfileState> {
     final file = await _imagePickerRepository.pickImage();
     emit(ProfileState(file));
   }
-}
+}*/
